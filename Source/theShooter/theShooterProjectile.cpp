@@ -90,18 +90,19 @@ void AtheShooterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 
 	if (OtherActor != nullptr)
 	{
-		// Chooses a random value for the color within a range of 0.f and 1.f
-		float ranNumX = UKismetMathLibrary::RandomFloatInRange(0.f, 1.f);
-		float ranNumY = UKismetMathLibrary::RandomFloatInRange(0.f, 1.f);
-		float ranNumZ = UKismetMathLibrary::RandomFloatInRange(0.f, 1.f);
+
+		if (colorP){
+			UNiagaraComponent* particleComp = UNiagaraFunctionLibrary::SpawnSystemAttached(colorP, HitComp, NAME_None, FVector(-20.f,0.f,0.f),FRotator(0.f), EAttachLocation::KeepRelativeOffset, true);
+			particleComp->SetNiagaraVariableLinearColor(FString("RandomColor"), randColor);
+			ballMesh->DestroyComponent();
+			CollisionComp->BodyInstance.SetCollisionProfileName("NoCollision");
+		}
+
 
 		// chooses which image to use in the 2x2 decal
 		float frameNum = UKismetMathLibrary::RandomFloatInRange(0.f, 3.f);
 
-		// Sets the decal based on the values created
-		FVector4 localRandColor = FVector4(ranNumX, ranNumY, ranNumZ, 1.f);
-
-		//
+		
 		auto Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), baseMat, FVector(UKismetMathLibrary::RandomFloatInRange(20.f, 40.f)), Hit.Location, Hit.Normal.Rotation(), 0.f);
 		auto MatInstance = Decal->CreateDynamicMaterialInstance();
 

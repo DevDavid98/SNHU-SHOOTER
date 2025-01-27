@@ -4,6 +4,8 @@
 #include "CubeDMIMOD.h"
 #include "theShooterCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 
 
@@ -62,11 +64,17 @@ void ACubeDMIMOD::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		float ranNumZ = UKismetMathLibrary::RandomFloatInRange(0.f, 1.f);
 
 
-		FVector4 randColor = FVector4(ranNumX, ranNumY, ranNumZ, 1.f);
+		FLinearColor randColor = FLinearColor(ranNumX, ranNumY, ranNumZ, 1.f);
 		if (dmiMAT)
 		{
 			dmiMAT->SetVectorParameterValue("Color", randColor);
 			dmiMAT->SetScalarParameterValue("Darkness", ranNumX);
+
+			if (colorP)
+			{
+				UNiagaraComponent* particleComp = UNiagaraFunctionLibrary::SpawnSystemAttached(colorP, OtherComp, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::KeepRelativeOffset, true);
+				particleComp->SetNiagaraVariableLinearColor(FString("RandColor"), randColor);
+			}
 		}
 
 	}
