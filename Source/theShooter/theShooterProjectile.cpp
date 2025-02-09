@@ -10,7 +10,8 @@
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
-//#include "PerlinProcTerrain.h"
+
+#include "PerlinProcTerrain.h"
 
 AtheShooterProjectile::AtheShooterProjectile() 
 {
@@ -108,6 +109,15 @@ void AtheShooterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 
 		MatInstance->SetVectorParameterValue("Color", randColor);
 		MatInstance->SetScalarParameterValue("Frame", frameNum);
+
+		// CAST BALL TO TERRAIN
+		APerlinProcTerrain* procTerrain = Cast<APerlinProcTerrain>(OtherActor);
+
+		// IF procTerrain CALL ALTERMESH at the impactpoint
+		if (procTerrain)
+		{
+			procTerrain->AlterMesh(Hit.ImpactPoint);
+		}
 
 		Decal->SetLifeSpan(5.0f);
 
