@@ -44,7 +44,10 @@ protected:
 	virtual void BeginPlay();
 
 public:
-		
+	
+	UPROPERTY(EditAnywhere)
+		bool isTeleporting;
+
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
